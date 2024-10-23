@@ -22,7 +22,7 @@ func run(ctx context.Context) error {
 
 	s := NewService(db)
 
-	if err := s.Init(); err != nil {
+	if err := s.Init(ctx); err != nil {
 		return err
 	}
 	return nil
