@@ -1,8 +1,7 @@
-package main
+package pubsub
 
 import (
 	"context"
-	"database/sql"
 	"os"
 	"testing"
 	"time"
@@ -11,11 +10,12 @@ import (
 func TestService(t *testing.T) {
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite3", "pubsub.db")
-	ok(t, err)
-	defer db.Close()
+	const fname = "pubsub.db"
 
-	s := NewService(db)
+	s, err := NewService(fname)
+	ok(t, err)
+	defer s.Close()
+
 	err = s.Init(ctx)
 	ok(t, err)
 
@@ -42,7 +42,6 @@ func TestService(t *testing.T) {
 	equals(t, 1, len(messages), "message count doesn't match expectation")
 	equals(t, "content", messages[0].Content, "message content doesn't match expectation")
 
-	t.Logf("message contents: %v", messages[0])
 	message := messages[0]
 
 	now := time.Now()
@@ -69,7 +68,7 @@ func TestService(t *testing.T) {
 	ok(t, err)
 	equals(t, 0, len(messages), "message count after acknowledging message doesn't match expectation")
 
-	_ = os.Remove("pubsub.db")
+	_ = os.Remove(fname)
 	t.Log("Test successful. Database removed")
 }
 

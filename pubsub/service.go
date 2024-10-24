@@ -1,4 +1,4 @@
-package main
+package pubsub
 
 import (
 	"context"
@@ -37,8 +37,16 @@ func (m *Message) String() string {
 	return fmt.Sprintf("ID: %d, TopicID: %d, SubscriptionID: %d, Content: %s, Metadata: %s, Acknowledged: %t, AckDeadline: %v", m.ID, m.TopicID, m.SubscriptionID, m.Content, string(m.Metadata), m.Acknowledged, m.AckDeadline)
 }
 
-func NewService(db *sql.DB) *Service {
-	return &Service{db: db}
+func NewService(fname string) (*Service, error) {
+	db, err := sql.Open("sqlite3", fname)
+	if err != nil {
+		return nil, err
+	}
+	return &Service{db: db}, nil
+}
+
+func (s *Service) Close() error {
+	return s.db.Close()
 }
 
 func (s *Service) CreateTopic(ctx context.Context, name string, metadata []byte) error {
