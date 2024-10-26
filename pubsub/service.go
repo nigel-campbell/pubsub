@@ -246,13 +246,13 @@ func (s *Service) PullMessages(ctx context.Context, subscriptionID int, ackDeadl
 }
 
 // AcknowledgeMessage sets the acknowledged field to true for a message
-func (s *Service) AcknowledgeMessage(ctx context.Context, messageID int) error {
-	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET acknowledged = 1 WHERE id = ?", messageID)
+func (s *Service) AcknowledgeMessage(ctx context.Context, subscriptionId int, messageID int) error {
+	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET acknowledged = 1 WHERE id = ? and subscription_id = ?", messageID, subscriptionId)
 	return err
 }
 
-func (s *Service) ModifyAckDeadline(ctx context.Context, messageID int, ackDeadline time.Time) error {
-	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET ack_deadline = ? WHERE id = ?", ackDeadline, messageID)
+func (s *Service) ModifyAckDeadline(ctx context.Context, subscriptionId int, messageID int, ackDeadline time.Time) error {
+	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET ack_deadline = ? WHERE id = ? and subscription_id = ?", subscriptionId, ackDeadline, messageID)
 	return err
 }
 

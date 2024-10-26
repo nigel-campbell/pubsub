@@ -52,14 +52,14 @@ func TestService(t *testing.T) {
 	ok(t, err)
 	equals(t, 0, len(messages), "message count when pulling messages again doesn't match expectation")
 
-	err = s.ModifyAckDeadline(ctx, message.ID, now.Add(-time.Minute*12))
+	err = s.ModifyAckDeadline(ctx, subscription.ID, message.ID, now.Add(-time.Minute*12))
 	ok(t, err)
 
 	messages, err = s.PullMessages(ctx, subscription.ID, now.Add(time.Second*10))
 	ok(t, err)
 	equals(t, 1, len(messages), "message count after modifying ack deadline doesn't match expectation")
 
-	err = s.AcknowledgeMessage(ctx, message.ID)
+	err = s.AcknowledgeMessage(ctx, subscription.ID, message.ID)
 	ok(t, err)
 
 	messages, err = s.PullMessages(ctx, subscription.ID, now.Add(time.Second*10))
