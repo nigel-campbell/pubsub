@@ -10,13 +10,16 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Initialize the PubSub environment",
+	Long: `Sets up the necessary database tables and prepares the PubSub environment for operation.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+The "init" command creates the required database schema, including tables for topics, subscriptions, and messages, 
+in the SQLite database. Run this command once before adding topics, subscriptions, or messages to ensure the database 
+is correctly set up.
+
+Examples:
+  pubsub init   # Sets up the database and required tables
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		svc, err := pubsub.NewService(pubsub.DefaultFilename)
 		if err != nil {

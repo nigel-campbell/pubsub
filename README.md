@@ -47,33 +47,6 @@ The basic commands are:
 ./bin/pubsub clean                                 # Clean all data
 ```
 
-## Project Structure
-
-```plaintext
-├── LICENSE             # License file
-├── Makefile            # Build and setup commands
-├── README.md           # Project documentation
-├── bin/                # Compiled binary
-│   └── pubsub
-├── cmd/                # CLI command implementations
-│   ├── ack.go
-│   ├── add.go
-│   ├── clean.go
-│   ├── init.go
-│   ├── list.go
-│   ├── pull.go
-│   ├── root.go
-│   ├── subscriptions.go
-│   └── topics.go
-├── go.mod              # Go module file
-├── go.sum              # Go dependency file
-├── pubsub/             # Service and database logic
-│   ├── service.go
-│   └── service_test.go
-├── pubsub.db           # SQLite database file
-└── pubsub.go           # Main application entry point
-```
-
 ## License
 
 This project is licensed under the terms of the [MIT License](LICENSE).
