@@ -5,8 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"pubsub-cli/pubsub"
-
 	"github.com/spf13/cobra"
 )
 
@@ -29,11 +27,4 @@ const defaultFilename = "pubsub.db"
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	svc, err := pubsub.NewService(defaultFilename)
-	if err != nil {
-		fmt.Println("Error initializing pubsub service:", err)
-		return
-	}
-	_ = svc.Close()
 }

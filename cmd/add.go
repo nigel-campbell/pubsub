@@ -18,7 +18,6 @@ var addCmd = &cobra.Command{
 	Long:  "Use this command to add new topics, subscriptions, or messages to the Pub/Sub system",
 }
 
-// addTopicCmd represents the "add topic" command
 var topicCmd = &cobra.Command{
 	Use:   "topic [TOPIC_ID]",
 	Short: "Add a new topic",
@@ -31,7 +30,6 @@ var topicCmd = &cobra.Command{
 	},
 }
 
-// addSubscriptionCmd represents the "add subscription" command
 var subscriptionCmd = &cobra.Command{
 	Use:   "subscription [TOPIC_ID] [SUBSCRIPTION_ID]",
 	Short: "Add a new subscription to a topic",
@@ -60,17 +58,15 @@ var messageCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-	// Register "add topic" command
+
 	addCmd.AddCommand(topicCmd)
 	topicCmd.Flags().StringVarP(&configFile, "config", "d", "", "Path to topic configuration file")
 	topicCmd.MarkFlagRequired("config") // Make sure config flag is required
 
-	// Register "add subscription" command
 	addCmd.AddCommand(subscriptionCmd)
 	subscriptionCmd.Flags().StringVarP(&configFile, "config", "d", "", "Path to subscription configuration file")
 	subscriptionCmd.MarkFlagRequired("config") // Make sure config flag is required
 
-	// Register "add message" command
 	addCmd.AddCommand(messageCmd)
 	messageCmd.Flags().StringVarP(&messagePayload, "message", "d", "", "Message payload")
 	messageCmd.MarkFlagRequired("message") // Make sure message payload flag is required
