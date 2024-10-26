@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const DefaultFilename = "pubsub.db"
+
 type Service struct {
 	db *sql.DB
 }
@@ -61,16 +63,62 @@ func (s *Service) GetTopic(ctx context.Context, name string) (*Topic, error) {
 	return topic, err
 }
 
+func (s *Service) ListTopics(ctx context.Context) ([]*Topic, error) {
+	rows, err := s.db.QueryContext(ctx, "SELECT id, name, metadata FROM Topics")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var topics []*Topic
+	for rows.Next() {
+		topic := &Topic{}
+		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Metadata); err != nil {
+			return nil, err
+		}
+		topics = append(topics, topic)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return topics, nil
+}
+
 func (s *Service) CreateSubscription(ctx context.Context, topicID int, subscriberID string, metadata []byte) error {
-	_, err := s.db.Exec("INSERT INTO Subscriptions (topic_id, subscriber_id, metadata) VALUES (?, ?, ?)", topicID, subscriberID, metadata)
+	_, err := s.db.ExecContext(ctx, "INSERT INTO Subscriptions (topic_id, subscriber_id, metadata) VALUES (?, ?, ?)", topicID, subscriberID, metadata)
 	return err
 }
 
 func (s *Service) GetSubscription(ctx context.Context, topicID int, subscriberID string) (*Subscription, error) {
-	row := s.db.QueryRow("SELECT id, topic_id, subscriber_id FROM Subscriptions WHERE topic_id = ? AND subscriber_id = ?", topicID, subscriberID)
+	row := s.db.QueryRowContext(ctx, "SELECT id, topic_id, subscriber_id FROM Subscriptions WHERE topic_id = ? AND subscriber_id = ?", topicID, subscriberID)
 	subscription := &Subscription{}
 	err := row.Scan(&subscription.ID, &subscription.TopicID, &subscription.SubscriberID)
 	return subscription, err
+}
+
+func (s *Service) ListSubscriptions(ctx context.Context, topicID int) ([]*Subscription, error) {
+	rows, err := s.db.QueryContext(ctx, "SELECT id, topic_id, subscriber_id FROM Subscriptions WHERE topic_id = ?", topicID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var subscriptions []*Subscription
+	for rows.Next() {
+		subscription := &Subscription{}
+		if err := rows.Scan(&subscription.ID, &subscription.TopicID, &subscription.SubscriberID); err != nil {
+			return nil, err
+		}
+		subscriptions = append(subscriptions, subscription)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return subscriptions, nil
 }
 
 func (s *Service) PublishMessage(ctx context.Context, topicID int, content string, metadata []byte) error {

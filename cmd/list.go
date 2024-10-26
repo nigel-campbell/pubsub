@@ -1,40 +1,114 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"pubsub-cli/pubsub"
+	"strconv"
+	"time"
 
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
+// Use a default timeout for database operations
+const dbTimeout = 5 * time.Second
+
+// listCmd represents the base "list" command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "List topics, subscriptions, or messages",
+	Long:  "Use this command to list topics, subscriptions for a given topic, or messages for a specific topic and subscription.",
+}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+// listTopicsCmd lists all topics
+var listTopicsCmd = &cobra.Command{
+	Use:   "topics",
+	Short: "List all topics",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+		defer cancel()
+
+		svc, err := pubsub.NewService(pubsub.DefaultFilename)
+		if err != nil {
+			log.Fatalf("Failed to initialize service: %v", err)
+		}
+
+		topics, err := svc.ListTopics(ctx)
+		if err != nil {
+			log.Fatalf("Error retrieving topics: %v", err)
+		}
+
+		fmt.Println("Topics:")
+		for _, topic := range topics {
+			fmt.Printf("- ID: %d, Name: %s, Metadata: %s\n", topic.ID, topic.Name, topic.Metadata)
+		}
+	},
+}
+
+// listSubscriptionsCmd lists subscriptions for a given topic
+var listSubscriptionsCmd = &cobra.Command{
+	Use:   "subscriptions [TOPIC_ID]",
+	Short: "List all subscriptions for a specific topic",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+		defer cancel()
+
+		svc, err := pubsub.NewService(pubsub.DefaultFilename)
+		if err != nil {
+			log.Fatalf("Failed to initialize service: %v", err)
+		}
+
+		topicId, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Fatalf("Error converting topic ID to integer: %v", err)
+		}
+
+		subscriptions, err := svc.ListSubscriptions(ctx, topicId)
+		if err != nil {
+			log.Fatalf("Error retrieving subscriptions for topic %d: %v", topicId, err)
+		}
+		fmt.Printf("Subscriptions for topic %d:\n", topicId)
+		for _, sub := range subscriptions {
+			fmt.Printf("- ID: %d, SubscriberID: %s\n", sub.ID, sub.SubscriberID)
+		}
+	},
+}
+
+// listMessagesCmd lists messages for a given topic and subscription
+var listMessagesCmd = &cobra.Command{
+	Use:   "messages [SUBSCRIPTION_ID]",
+	Short: "List all messages for a specific subscription",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+		defer cancel()
+
+		svc, err := pubsub.NewService(pubsub.DefaultFilename)
+		if err != nil {
+			log.Fatalf("Failed to initialize service: %v", err)
+		}
+
+		subscriptionId, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Fatalf("Error converting topic ID to integer: %v", err)
+		}
+
+		messages, err := svc.GetMessages(ctx, subscriptionId)
+		if err != nil {
+			log.Fatalf("Error retrieving messages for subscription %s: %v", subscriptionId, err)
+		}
+		fmt.Printf("Messages for subscription %d:\n", subscriptionId)
+		for _, msg := range messages {
+			fmt.Println(msg)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listCmd.AddCommand(listTopicsCmd)
+	listCmd.AddCommand(listSubscriptionsCmd)
+	listCmd.AddCommand(listMessagesCmd)
 }

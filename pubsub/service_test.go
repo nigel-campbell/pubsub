@@ -10,9 +10,7 @@ import (
 func TestService(t *testing.T) {
 	ctx := context.Background()
 
-	const fname = "pubsub.db"
-
-	s, err := NewService(fname)
+	s, err := NewService(DefaultFilename)
 	ok(t, err)
 	defer s.Close()
 
@@ -68,7 +66,7 @@ func TestService(t *testing.T) {
 	ok(t, err)
 	equals(t, 0, len(messages), "message count after acknowledging message doesn't match expectation")
 
-	_ = os.Remove(fname)
+	_ = os.Remove(DefaultFilename)
 	t.Log("Test successful. Database removed")
 }
 

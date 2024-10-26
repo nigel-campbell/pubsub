@@ -4,8 +4,10 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/spf13/cobra"
+	"pubsub-cli/pubsub"
 )
 
 // initCmd represents the init command
@@ -19,11 +21,20 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		svc, err := pubsub.NewService(pubsub.DefaultFilename)
+		if err != nil {
+			fmt.Println("Error creating Pub/Sub service:", err)
+			return
+		}
+		defer svc.Close()
+
+		err = svc.Init(context.Background())
+		if err != nil {
+			fmt.Println("Error initializing Pub/Sub service:", err)
+			return
+		}
 	},
 }
-
-const defaultFilename = "pubsub.db"
 
 func init() {
 	rootCmd.AddCommand(initCmd)
