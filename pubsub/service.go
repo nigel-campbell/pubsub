@@ -252,7 +252,7 @@ func (s *Service) AcknowledgeMessage(ctx context.Context, subscriptionId int, me
 }
 
 func (s *Service) ModifyAckDeadline(ctx context.Context, subscriptionId int, messageID int, ackDeadline time.Time) error {
-	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET ack_deadline = ? WHERE id = ? and subscription_id = ?", subscriptionId, ackDeadline, messageID)
+	_, err := s.db.ExecContext(ctx, "UPDATE Messages SET ack_deadline = ? WHERE id = ? and subscription_id = ?", ackDeadline, messageID, subscriptionId)
 	return err
 }
 

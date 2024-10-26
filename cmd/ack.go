@@ -38,9 +38,9 @@ var ackCmd = &cobra.Command{
 
 		err = svc.AcknowledgeMessage(ctx, subscriptionID, messageID)
 		if err != nil {
-			log.Fatalf("Failed to acknowledge message %s in subscription %s: %v", messageID, subscriptionID, err)
+			log.Fatalf("Failed to acknowledge message %d in subscription %d: %v", messageID, subscriptionID, err)
 		}
-		fmt.Printf("Acknowledged message %s in subscription %s\n", messageID, subscriptionID)
+		fmt.Printf("Acknowledged message %d in subscription %d\n", messageID, subscriptionID)
 	},
 }
 
@@ -76,9 +76,11 @@ var modAckCmd = &cobra.Command{
 
 		err = svc.ModifyAckDeadline(ctx, subscriptionId, messageID, time.Now().Add(deadline))
 		if err != nil {
-			log.Fatalf("Failed to modify ack deadline for message %s: %v", messageID, err)
+			log.Fatalf("Failed to modify ack deadline for message %d: %v", messageID, err)
+			log.Fatalf("Failed to modify ack deadline for message %d: %v", messageID, err)
+			log.Fatalf("Failed to modify ack deadline for message %d: %v", messageID, err)
 		}
-		fmt.Printf("Modified ack deadline for message %s\n", messageID)
+		fmt.Printf("Modified ack deadline for message %d\n", messageID)
 	},
 }
 
@@ -111,7 +113,7 @@ var nackCmd = &cobra.Command{
 		// sign is interpreted as a flag. This is a workaround.
 		err = svc.ModifyAckDeadline(ctx, subscriptionId, messageID, time.Now())
 		if err != nil {
-			log.Fatalf("Failed to modify ack deadline for message %s: %v", messageID, err)
+			log.Fatalf("Failed to modify ack deadline for message %d: %v", messageID, err)
 		}
 		fmt.Printf("Modified ack deadline for message %d\n", messageID)
 	},

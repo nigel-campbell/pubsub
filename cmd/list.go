@@ -97,7 +97,7 @@ var listMessagesCmd = &cobra.Command{
 
 		messages, err := svc.GetMessages(ctx, subscriptionId)
 		if err != nil {
-			log.Fatalf("Error retrieving messages for subscription %s: %v", subscriptionId, err)
+			log.Fatalf("Error retrieving messages for subscription %d: %v", subscriptionId, err)
 		}
 
 		if len(messages) > 0 {

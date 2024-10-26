@@ -36,13 +36,13 @@ You can also set an acknowledgment deadline using the flag`,
 
 		messages, err := svc.PullMessages(ctx, subscriptionID, ackDeadline)
 		if err != nil {
-			log.Fatalf("Failed to pull messages for subscription %s: %v", subscriptionID, err)
+			log.Fatalf("Failed to pull messages for subscription %d: %v", subscriptionID, err)
 		}
 
 		if len(messages) == 0 {
 			fmt.Println("No messages to pull.")
 		} else {
-			fmt.Printf("Pulled messages for subscription %s:\n", subscriptionID)
+			fmt.Printf("Pulled messages for subscription %d:\n", subscriptionID)
 			for _, msg := range messages {
 				fmt.Println(msg)
 			}
