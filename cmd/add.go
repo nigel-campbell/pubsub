@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 	"log"
-	"pubsub-cli/pubsub"
+	"pubsub/pubsub"
 	"strconv"
 )
 
@@ -93,7 +93,7 @@ var addMessageCmd = &cobra.Command{
 			log.Fatalf("Error converting topic ID to integer: %v", err)
 		}
 
-		fmt.Printf("Adding message to topic: %s with payload: %s\n", topicID, messagePayload)
+		fmt.Printf("Adding message to topic: %d with payload: %s\n", topicID, messagePayload)
 		err = svc.PublishMessage(context.Background(), topicID, messagePayload, []byte{})
 		if err != nil {
 			log.Fatalf("Error adding message: %s", err)

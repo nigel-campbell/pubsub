@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/spf13/cobra"
-	"pubsub-cli/pubsub"
+	"pubsub/pubsub"
 )
 
 // initCmd represents the init command

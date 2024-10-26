@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"pubsub-cli/pubsub"
+	"pubsub/pubsub"
 	"strconv"
 	"time"
 
@@ -99,9 +99,14 @@ var listMessagesCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error retrieving messages for subscription %s: %v", subscriptionId, err)
 		}
-		fmt.Printf("Messages for subscription %d:\n", subscriptionId)
-		for _, msg := range messages {
-			fmt.Println(msg)
+
+		if len(messages) > 0 {
+			fmt.Printf("Messages for subscription %d:\n", subscriptionId)
+			for _, msg := range messages {
+				fmt.Println(msg)
+			}
+		} else {
+			fmt.Println("No messages found for subscription", subscriptionId)
 		}
 	},
 }
