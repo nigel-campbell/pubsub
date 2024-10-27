@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/nigel-campbell/pubsub/pubsub"
 	"github.com/spf13/cobra"
 	"os"
-	"pubsub/pubsub"
 )
 
 // cleanCmd represents the clean command

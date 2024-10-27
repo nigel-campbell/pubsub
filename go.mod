@@ -1,4 +1,4 @@
-module pubsub
+module github.com/nigel-campbell/pubsub
 
 go 1.23.1
 

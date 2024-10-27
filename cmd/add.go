@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/nigel-campbell/pubsub/pubsub"
 	"github.com/spf13/cobra"
 	"log"
-	"pubsub/pubsub"
 	"strconv"
 )
 

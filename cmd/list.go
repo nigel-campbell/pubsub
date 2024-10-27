@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/nigel-campbell/pubsub/pubsub"
 	"log"
-	"pubsub/pubsub"
 	"strconv"
 	"time"
 

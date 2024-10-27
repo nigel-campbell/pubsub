@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/nigel-campbell/pubsub/pubsub"
 	"github.com/spf13/cobra"
-	"pubsub/pubsub"
 )
 
 // initCmd represents the init command

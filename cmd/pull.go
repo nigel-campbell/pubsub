@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/nigel-campbell/pubsub/pubsub"
 	"github.com/spf13/cobra"
 	"log"
-	"pubsub/pubsub"
 	"strconv"
 	"time"
 )
