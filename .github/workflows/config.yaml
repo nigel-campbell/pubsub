@@ -25,4 +25,4 @@ jobs:
         run: go mod tidy  # Ensures dependencies are up to date
 
       - name: Run unit tests
-        run: go test pubsub/...  # Command to run all tests in the pubsub-emulator module
+        run: go test github.com/nigel-campbell/pubsub/...  # Command to run all tests in the pubsub-emulator module
