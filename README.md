@@ -2,8 +2,6 @@
 
 A command-line tool to emulate a Pub/Sub service. This tool allows you to manage topics, subscriptions, and messages, mimicking the behavior of a Pub/Sub system in a local SQLite database.
 
-Intended for https://github.com/nigel-campbell/pubsub-emulator.
-
 ## Features
 
 - **Initialize** the Pub/Sub environment with necessary tables and database setup.
